@@ -1,0 +1,22 @@
+Package: DHSCconsultations
+Title: Collection of tools for analysing consultation responses
+Version: 0.0.0.9000
+Authors@R: 
+    person(, "Data Science Team", , "datascience@dhsc.gov.uk", role = c("aut", "cre"))
+Description: Package contains a collection of functions that can be used to 
+    perform LDA analysis of consultation responses.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports: 
+    dplyr (>= 1.1.4),
+    rlang (>= 1.1.3),
+    rvest (>= 1.0.3),
+    SnowballC (>= 0.7.1),
+    stats,
+    stringi (>= 1.8.3),
+    stringr (>= 1.5.1),
+    tidyr (>= 1.3.1),
+    tidytext (>= 0.4.1),
+    topicmodels (>= 0.2.16)

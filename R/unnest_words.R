@@ -91,8 +91,8 @@ unnest_words <- function(
   # strange bug with unnest_token not handling strings correctly
   data <- data |>
     tidytext::unnest_tokens(
-      output = !!dplyr::sym(col_word),
-      input = !!dplyr::sym(col_question),
+      output = !!rlang::sym(col_word),
+      input = !!rlang::sym(col_question),
       token = "words",
       format = "text",
       to_lower = FALSE,

@@ -1,5 +1,6 @@
 
 
+#' @keywords internal
 get_cols_free_text <- function(data, col_id, cols_free_text) {
   if (!is.null(cols_free_text)) {
     out <- cols_free_text

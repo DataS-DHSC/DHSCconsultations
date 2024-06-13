@@ -8,6 +8,14 @@
 \description{
 Package contains a collection of functions that can be used to perform LDA analysis of consultation responses.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/DataS-DHSC/DHSCconsultations}
+  \item Report bugs at \url{https://github.com/DataS-DHSC/DHSCconsultations/issues}
+}
+
+}
 \author{
 \strong{Maintainer}:  Data Science Team \email{datascience@dhsc.gov.uk}
 

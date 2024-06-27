@@ -111,8 +111,8 @@ unnest_ngrams <- function(
         n_stop = sum(is_stop),
         .by = id
       ) |>
-      filter(n - n_stop >= n_min) |>
-      select(all_of(col_word))
+      dplyr::filter(n - n_stop >= n_min) |>
+      dplyr::select(all_of(col_word))
   }
 
   return(data)

@@ -13,11 +13,11 @@
 #' @return
 #' @export
 #'
-stemming_summary <- function(data, text_cleaner,
-                             stem_word_exceptions,
-                             stop_words = NULL,
-                             glossary_words = NULL,
-                             col_id = NULL, cols_free_text = NULL) {
+summarise_stemming <- function(data, text_cleaner,
+                               stem_word_exceptions,
+                               stop_words = NULL,
+                               glossary_words = NULL,
+                               col_id = NULL, cols_free_text = NULL) {
 
   if (is.null(stop_words)) stop_words <- tidytext::stop_words$word
 

@@ -14,11 +14,11 @@
 #' @export
 #'
 #' @examples
-ngram_summary <- function(data, text_cleaner,
-                          n = list("bi-gram" = 2, "tri-gram" = 3),
-                          stop_words = NULL,
-                          glossary_words = NULL,
-                          col_id = NULL, cols_free_text = NULL) {
+summarise_ngrams <- function(data, text_cleaner,
+                             n = list("bi-gram" = 2, "tri-gram" = 3),
+                             stop_words = NULL,
+                             glossary_words = NULL,
+                             col_id = NULL, cols_free_text = NULL) {
 
   if (is.null(stop_words)) stop_words <- tidytext::stop_words$word
 
@@ -57,9 +57,25 @@ ngram_summary <- function(data, text_cleaner,
 #' @return
 #' @export
 #'
-view_ngram_summary <- function(ngram_list, plot_rows = 30) {
+view_ngram_summary <- function(ngram_list) {
   for (token_type in names(ngram_list)) {
-    view_token_counts(ngram_list[[token_type]], token_type, plot_rows)
+    view_token_counts(ngram_list[[token_type]], token_type)
+  }
+  return(invisible(ngram_list))
+}
+
+
+#' Title
+#'
+#' @param ngram_list
+#' @param plot_rows
+#'
+#' @return
+#' @export
+#'
+plot_ngram_summary <- function(ngram_list, plot_rows = 30) {
+  for (token_type in names(ngram_list)) {
+    plot_token_counts(ngram_list[[token_type]], plot_rows)
   }
   return(invisible(ngram_list))
 }

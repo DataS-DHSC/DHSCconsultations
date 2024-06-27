@@ -10,8 +10,8 @@
 #' @return
 #' @export
 #'
-text_cleaner_summary <- function(data, text_cleaner,
-                                 col_id = NULL, cols_free_text = NULL) {
+summarise_text_cleaner <- function(data, text_cleaner,
+                                   col_id = NULL, cols_free_text = NULL) {
 
   cols_free_text <- get_cols_free_text(data, col_id, cols_free_text)
 

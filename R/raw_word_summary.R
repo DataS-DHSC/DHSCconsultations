@@ -13,10 +13,10 @@
 #' @return
 #' @export
 #'
-raw_word_summary <- function(data, text_cleaner = NULL,
-                             stop_words = NULL,
-                             glossary_words = NULL,
-                             col_id = NULL, cols_free_text = NULL) {
+summarise_raw_words <- function(data, text_cleaner = NULL,
+                                stop_words = NULL,
+                                glossary_words = NULL,
+                                col_id = NULL, cols_free_text = NULL) {
 
   if (is.null(text_cleaner))
     text_cleaner <- \(x) stringr::str_replace_all(x, "[^0-9a-zA-Z'\\s]", "")
@@ -24,7 +24,7 @@ raw_word_summary <- function(data, text_cleaner = NULL,
   if (is.null(stop_words))
     stop_words <- c(
       tidytext::stop_words$word,
-      str_to_title(tidytext::stop_words$word)
+      stringr::str_to_title(tidytext::stop_words$word)
     )
 
   cols_free_text <- get_cols_free_text(data, col_id, cols_free_text)
@@ -57,8 +57,22 @@ raw_word_summary <- function(data, text_cleaner = NULL,
 #' @return
 #' @export
 #'
-view_raw_word_summary <- function(data, plot_rows = 30) {
-  view_token_counts(data, "word", plot_rows)
+view_raw_word_summary <- function(data) {
+  view_token_counts(data, "word")
+  return(invisible(data))
+}
+
+
+#' Title
+#'
+#' @param ngram_list
+#' @param plot_rows
+#'
+#' @return
+#' @export
+#'
+plot_raw_word_summary <- function(data, plot_rows = 30) {
+  plot_token_counts(data, plot_rows)
   return(invisible(data))
 }
 

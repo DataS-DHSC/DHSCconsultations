@@ -13,11 +13,11 @@
 #' @return
 #' @export
 #'
-word_summary <- function(data, text_cleaner,
-                         min_char = 2,
-                         stop_words = NULL,
-                         glossary_words = NULL,
-                         col_id = NULL, cols_free_text = NULL) {
+summarise_words <- function(data, text_cleaner,
+                            min_char = 2,
+                            stop_words = NULL,
+                            glossary_words = NULL,
+                            col_id = NULL, cols_free_text = NULL) {
 
   if (is.null(stop_words)) stop_words <- tidytext::stop_words$word
 
@@ -51,8 +51,22 @@ word_summary <- function(data, text_cleaner,
 #' @return
 #' @export
 #'
-view_word_summary <- function(data, plot_rows = 30) {
-  view_token_counts(data, "word", plot_rows)
+view_word_summary <- function(data) {
+  view_token_counts(data, "word")
+  return(invisible(data))
+}
+
+
+#' Title
+#'
+#' @param ngram_list
+#' @param plot_rows
+#'
+#' @return
+#' @export
+#'
+plot_word_summary <- function(data, plot_rows = 30) {
+  plot_token_counts(data, plot_rows)
   return(invisible(data))
 }
 

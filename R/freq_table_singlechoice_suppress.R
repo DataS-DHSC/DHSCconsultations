@@ -43,7 +43,7 @@ singlechoice_suppress <- function(freq_table,
 
   masked_freq_table <- freq_table |>
     dplyr::arrange({{ freq_column }}) |>
-    dplyr::mutate(ranking = rank(Freq, ties.method = "min")) |>
+    dplyr::mutate(ranking = rank({{ freq_column }}, ties.method = "min")) |>
     dplyr::mutate(masked_freq = dplyr::case_when(cumsum({{ freq_column }}) < 1 ~ -99,
                                    TRUE ~ {{ freq_column }})) |>
     dplyr::mutate(masked_count = sum(masked_freq == -99)) |>

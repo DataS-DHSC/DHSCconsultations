@@ -2,21 +2,21 @@
 % Please edit documentation in R/unnest_to_dtm.R
 \name{unnest_to_dtm}
 \alias{unnest_to_dtm}
-\title{Convert an unnested data frame to a document-term matrix}
+\title{Convert an un-nested data frame to a document-term matrix}
 \usage{
-unnest_to_dtm(data, col_doc_id, col_word = "word")
+unnest_to_dtm(data, col_resp_id, col_word = "word")
 }
 \arguments{
-\item{data}{data frame of unnested words to be converted.}
+\item{data}{data frame of un-nested words to be converted.}
 
-\item{col_doc_id}{character string of column containing the document ids.}
+\item{col_resp_id}{character string of column containing the response ids.}
 
 \item{col_word}{character string of column containing the
-unnested words (default = "word")}
+un-nested words (default = "word")}
 }
 \value{
-document-term matrix representation of the unnested data frame.
+document-term matrix representation of the un-nested data frame.
 }
 \description{
-Convert an unnested data frame to a document-term matrix
+Convert an un-nested data frame to a document-term matrix
 }

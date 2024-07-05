@@ -2,21 +2,34 @@
 % Please edit documentation in R/ngram_summary.R
 \name{summarise_ngrams}
 \alias{summarise_ngrams}
-\title{Title}
+\title{Summarise all n-grams in response text by frequency}
 \usage{
 summarise_ngrams(
   data,
-  text_cleaner,
-  n = list(`bi-gram` = 2, `tri-gram` = 3),
-  stop_words = NULL,
-  glossary_words = NULL,
-  col_id = NULL,
-  cols_free_text = NULL
+  clean_text_fn,
+  glossary_words,
+  stop_words,
+  n = list(`bi-gram` = 2, `tri-gram` = 3)
 )
 }
 \arguments{
-\item{cols_free_text}{}
+\item{data}{data frame containing response text for all questions.}
+
+\item{clean_text_fn}{function used to clean question text.}
+
+\item{glossary_words}{character vector of multi-word terms to be replaced
+with single word equivalents (set to NULL to ignore).}
+
+\item{stop_words}{character vector of common words to be removed from
+un-nested values (set to NULL to ignore).}
+
+\item{n}{named list where names are the n-gram types and values are the
+the number of terms (default is \code{list("bi-gram" = 2, "tri-gram" = 3)}).}
+}
+\value{
+named list of lists where names are n-gram types and
+values are named lists where names are questions and values n-gram counts.
 }
 \description{
-Title
+Summarise all n-grams in response text by frequency
 }

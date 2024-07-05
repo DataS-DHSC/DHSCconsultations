@@ -2,11 +2,11 @@
 % Please edit documentation in R/unnest_ngrams.R
 \name{unnest_ngrams}
 \alias{unnest_ngrams}
-\title{Unnest text responses to a question into ngrams for analysis}
+\title{Un-nest text responses to a question into n-grams for analysis}
 \usage{
 unnest_ngrams(
   data,
-  col_question,
+  col_free_text,
   n,
   clean_text_fn,
   glossary_words,
@@ -16,33 +16,28 @@ unnest_ngrams(
 )
 }
 \arguments{
-\item{data}{data frame containing question text and response id only.}
+\item{data}{data frame containing response text and ids to a single question.}
 
-\item{col_question}{character string of column containing the
-question text to unnest.}
+\item{col_free_text}{character string of column containing the
+question text to un-nest.}
 
-\item{n}{integer giving number of words in n-gram.}
+\item{n}{integer giving number of words in n-gram (min = 2).}
 
 \item{clean_text_fn}{function used to clean question text.}
 
-\item{glossary_words}{set of multi-word character strings to be replaced with
-single word equivalents.}
+\item{glossary_words}{character vector of multi-word terms to be replaced
+with single word equivalents (set to NULL to ignore).}
 
-\item{stop_words}{set of common words to be removed from unnested values.}
+\item{stop_words}{character vector of common words to be removed from
+un-nested values (set to NULL to ignore).}
 
-\item{col_word}{character string for unnested column (default = "word")}
+\item{col_word}{character string for un-nested column (default = "ngram")}
 
-\item{stem_word_exceptions}{set of character strings not to stem. Note
-these strings must match exactly.}
-
-\item{min_char}{minimum number of characters needed to be included in
-analysis (default = 2)}
-
-\item{use_stemming}{logical indicating if stemming should be applied (if set
-to FALSE the value of \code{stem_word_exceptions} is ignored)}
+\item{n_min}{integer giving minimum number of non-stop words in n-gram to be
+included (default = \code{n}).}
 }
 \value{
-data frame of unnested words
+data frame of un-nested n-grams.
 }
 \description{
 Note that the passed \code{clean_text_fn} should deal with stripping out

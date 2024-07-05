@@ -1,5 +1,7 @@
-
-#' Stem unnested words before LDA analysis
+#' Stem un-nested words before LDA analysis
+#'
+#' Uses the [SnowballC::wordStem()] function to apply Dr Porter's stemming
+#' algorithm.
 #'
 #' @param x character vector of words to be stemmed.
 #' @param exceptions optional character vector of strings not to stem. Note
@@ -9,16 +11,14 @@
 #' @export
 #'
 #' @examplesIf interactive()
-#' df <- data.frame(id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA))
+#' df <- data.frame(
+#'   id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA)
+#' )
 #' stem_words(df, word)
 #'
 stem_words <- function(x, exceptions = NULL) {
-
-  stopifnot(
-    "`x` must be a character vector" = (is.character(x) || is.vector(x)),
-    "`exceptions` must be NULL or a character vector" =
-      (is.null(exceptions) || is.character(exceptions) || is.vector(exceptions))
-  )
+  assert_character(x)
+  assert_character(exceptions, null.ok = TRUE)
 
   word_stems <- SnowballC::wordStem(x)
 

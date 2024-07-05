@@ -2,7 +2,7 @@
 % Please edit documentation in R/stem_words.R
 \name{stem_words}
 \alias{stem_words}
-\title{Stem unnested words before LDA analysis}
+\title{Stem un-nested words before LDA analysis}
 \usage{
 stem_words(x, exceptions = NULL)
 }
@@ -16,11 +16,14 @@ these strings must match exactly.}
 character vector with their porter stemmed version.
 }
 \description{
-Stem unnested words before LDA analysis
+Uses the \code{\link[SnowballC:wordStem]{SnowballC::wordStem()}} function to apply Dr Porter's stemming
+algorithm.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-df <- data.frame(id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA))
+df <- data.frame(
+  id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA)
+)
 stem_words(df, word)
 \dontshow{\}) # examplesIf}
 }

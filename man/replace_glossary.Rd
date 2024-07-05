@@ -9,14 +9,15 @@ replace_glossary(x, glossary)
 \arguments{
 \item{x}{character vector of text to be transformed.}
 
-\item{glossary}{set of multi-word character strings to be replaced.}
+\item{glossary}{character vector of multi-word character strings to be
+replaced.}
 }
 \value{
 character vector with glossary words replaced with their single word
 equivalents.
 }
 \description{
-This function allows muti-word terms to be preserved during LDA.
+This function allows multi-word terms to be preserved during LDA.
 For example, National Health Service becomes "nationalhealthservice" rather
 than "national", "health", and "service"
 }

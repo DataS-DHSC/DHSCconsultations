@@ -2,19 +2,47 @@
 % Please edit documentation in R/lda_fit.R
 \name{fit_lda}
 \alias{fit_lda}
-\title{Run LDA across a series of responses to get curves}
+\title{Run LDA across a range of questions each with a range of topic numbers}
 \usage{
 fit_lda(
   data,
-  col_doc_id,
-  question_topic_numbers,
+  col_resp_id,
+  question_topic_ranges,
   seed,
   clean_text_fn,
   glossary_words,
   stop_words,
-  stem_word_exceptions = NULL
+  stem_word_exceptions
 )
 }
+\arguments{
+\item{data}{data frame containing response text and ids for all questions.}
+
+\item{col_resp_id}{character string of column containing response id.}
+
+\item{question_topic_ranges}{named list with names corresponding to
+questions to analyse and values integer vectors giving range of topic
+numbers to try.}
+
+\item{seed}{integer used to seed random number generator for Gibbs sampling.}
+
+\item{clean_text_fn}{function used to clean question text.}
+
+\item{glossary_words}{character vector of multi-word terms to be replaced
+with single word equivalents (set to NULL to ignore).}
+
+\item{stop_words}{character vector of common words to be removed from
+un-nested values (set to NULL to ignore).}
+
+\item{stem_word_exceptions}{character vector of terms not to stem (set to
+NULL to ignore). Note these strings must match exactly.}
+}
+\value{
+returns named list with names corresponding to questions and values
+being further named lists with these names being the topic number and the
+values the output of the LDA model.
+}
 \description{
-Run LDA across a series of responses to get curves
+Function will run a series of Latent Dirichlet Allocation models across
+questions for a range of topic numbers using the passed seed.
 }

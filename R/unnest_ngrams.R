@@ -1,78 +1,72 @@
-
-#' Unnest text responses to a question into ngrams for analysis
+#' Un-nest text responses to a question into n-grams for analysis
 #'
 #' Note that the passed `clean_text_fn` should deal with stripping out
 #' all punctuation, numbers, and changing case as required.
 #'
-#' @param data data frame containing question text and response id only.
-#' @param col_question character string of column containing the
-#'   question text to unnest.
-#' @param n integer giving number of words in n-gram.
+#' @param data data frame containing response text and ids to a single question.
+#' @param col_free_text character string of column containing the
+#'   question text to un-nest.
+#' @param n integer giving number of words in n-gram (min = 2).
 #' @param clean_text_fn function used to clean question text.
-#' @param glossary_words set of multi-word character strings to be replaced with
-#'   single word equivalents.
-#' @param stop_words set of common words to be removed from unnested values.
-#' @param stem_word_exceptions set of character strings not to stem. Note
-#'   these strings must match exactly.
-#' @param col_word character string for unnested column (default = "word")
-#' @param min_char minimum number of characters needed to be included in
-#'   analysis (default = 2)
-#' @param use_stemming logical indicating if stemming should be applied (if set
-#'   to FALSE the value of `stem_word_exceptions` is ignored)
+#' @param glossary_words character vector of multi-word terms to be replaced
+#'   with single word equivalents (set to NULL to ignore).
+#' @param stop_words character vector of common words to be removed from
+#'   un-nested values (set to NULL to ignore).
+#' @param col_word character string for un-nested column (default = "ngram")
+#' @param n_min integer giving minimum number of non-stop words in n-gram to be
+#'   included (default = `n`).
 #'
-#' @return data frame of unnested words
+#' @return data frame of un-nested n-grams.
 #' @export
 #'
-#'@importFrom rlang :=
+#' @importFrom rlang :=
 #'
 unnest_ngrams <- function(
     data,
-    col_question,
+    col_free_text,
     n,
     clean_text_fn,
     glossary_words,
     stop_words,
     col_word = "ngram",
-    n_min = n
-) {
-
-  stopifnot(
-    "`data` must be a data frame" = is.data.frame(data),
-    "`col_question` must be a single character string" =
-      (is.character(col_question) || length(col_question) == 1),
-    "`clean_text_fn` must be a function" = is.function(clean_text_fn),
-    "`glossary_words` must be set of character strings" =
-      (is.null(glossary_words) || is.character(glossary_words) ||
-         is.vector(glossary_words)),
-    "`stop_words` must be set of character strings" =
-      (is.null(stop_words) || is.character(stop_words) ||
-         is.vector(stop_words)),
-    "`col_word` must be a single character string" =
-      (is.character(col_word) || length(col_word) == 1)
-  )
+    n_min = n) {
+  assert_data_frame(data)
+  assert_string(col_free_text)
+  assert_integerish(n, lower = 2, max.len = 1)
+  assert_function(clean_text_fn)
+  assert_character(glossary_words, null.ok = TRUE)
+  assert_character(stop_words, null.ok = TRUE)
+  assert_string(col_word)
+  assert_integerish(n, lower = n, max.len = 1)
 
   # function to ensure consistency
-  .format <- \(x) x |> clean_text_fn() |> unique()
+  .format <- \(x) {
+    x |>
+      clean_text_fn() |>
+      unique()
+  }
 
-  if(!is.null(stop_words)) {
+  if (!is.null(stop_words)) {
     stop_words <- .format(stop_words)
+  } else {
+    stop_words <- character()
   }
 
   data <- data |>
     dplyr::filter(
-      !is.na(.data[[col_question]])
+      !is.na(.data[[col_free_text]])
     ) |>
     dplyr::mutate(
-      "{col_question}" := .data[[col_question]] |> clean_text_fn()
+      "{col_free_text}" := .data[[col_free_text]] |> clean_text_fn()
     ) |>
     dplyr::filter(
-      "{col_question}" != ""
+      "{col_free_text}" != ""
     )
 
   if (!is.null(glossary_words)) {
     data <- data |>
       dplyr::mutate(
-        "{col_question}" := .data[[col_question]] |>
+        "{col_free_text}" := .data[[col_free_text]] |>
           replace_glossary(.format(glossary_words))
       )
   }
@@ -81,7 +75,7 @@ unnest_ngrams <- function(
   data <- data |>
     tidytext::unnest_tokens(
       output = !!rlang::sym(col_word),
-      input = !!rlang::sym(col_question),
+      input = !!rlang::sym(col_free_text),
       token = "ngrams",
       format = "text",
       to_lower = FALSE,
@@ -108,11 +102,11 @@ unnest_ngrams <- function(
       ) |>
       dplyr::summarise(
         "{col_word}" := paste(.data[[col_word]], collapse = " "),
-        n_stop = sum(is_stop),
-        .by = id
+        n_stop = sum(.data[["is_stop"]]),
+        .by = .data[["id"]]
       ) |>
-      dplyr::filter(n - n_stop >= n_min) |>
-      dplyr::select(all_of(col_word))
+      dplyr::filter(n - .data[["n_stop"]] >= n_min) |>
+      dplyr::select(dplyr::all_of(col_word))
   }
 
   return(data)

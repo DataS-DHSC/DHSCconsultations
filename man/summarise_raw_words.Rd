@@ -2,20 +2,20 @@
 % Please edit documentation in R/raw_word_summary.R
 \name{summarise_raw_words}
 \alias{summarise_raw_words}
-\title{Title}
+\title{Summarise all raw words in response text by frequency}
 \usage{
-summarise_raw_words(
-  data,
-  text_cleaner = NULL,
-  stop_words = NULL,
-  glossary_words = NULL,
-  col_id = NULL,
-  cols_free_text = NULL
-)
+summarise_raw_words(data, glossary_words)
 }
 \arguments{
-\item{cols_free_text}{}
+\item{data}{data frame containing response text for all questions.}
+
+\item{glossary_words}{character vector of multi-word terms to be replaced
+with single word equivalents (set to NULL to ignore).}
+}
+\value{
+named list of data frame where names are questions and values are
+raw word counts
 }
 \description{
-Title
+Summarise all raw words in response text by frequency
 }

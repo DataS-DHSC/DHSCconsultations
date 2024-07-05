@@ -1,19 +1,36 @@
-
-#' Calculate LDA topic model
+#' Run Latent Dirichlet Allocation model
 #'
-#' @param dtm document-term matrix
-#' @param k number of topics to detect
-#' @param seed seed for Gibbs LDA
-#' @param burn_in parameter for Gibbs LDA
-#' @param iter parameter for Gibbs LDA
-#' @param keep parameter for Gibbs LDA
+#' Applies a Latent Dirichlet Allocation model using Gibbs sampling.
 #'
-#' @return list with elements: lda_out (full LDA topicmodel), beta (beta scores),
-#' gamma (gamma scores), and logLik (Log likelihood of topicmodel object)
+#' @param dtm document-term matrix of responses
+#' @param k integer number of topics to model
+#' @param seed integer seed for Gibbs sampling
+#' @param burn_in integer number of iterations of the Gibbs sampling to ignore
+#'   when calculating mean log-likelihood (total model iterations are
+#'   `burn_in` + `iter`).
+#' @param iter integer number of iterations of the Gibbs sampling to perform
+#'   after burn in (total model iterations are `burn_in` + `iter`).
+#' @param keep integer number of iterations between pulls used to calculate
+#'   the mean log-likelihood.
+#'
+#' @return list with elements: lda (final LDA topicmodel), beta (beta scores),
+#'   gamma (gamma scores), mean_loglik (log-likelihood calculated as the mean
+#'   of the pulled values after burn in), final_loglik (log-likelihood of the
+#'   final LDA model), and logliks (pulled log-likelihoods across all runs)
 #' @export
 #'
-run_lda_dtm <- function(dtm, k, seed, burn_in = 1000, iter = 1000, keep = 50){
-  out <- list()
+run_lda_dtm <- function(
+    dtm,
+    k,
+    seed,
+    burn_in = 1000,
+    iter = 1000,
+    keep = 50) {
+  assert_integerish(k, len = 1)
+  assert_integerish(seed, len = 1)
+  assert_integerish(burn_in, len = 1)
+  assert_integerish(iter, len = 1)
+  assert_integerish(keep, len = 1)
 
   lda <- topicmodels::LDA(
     dtm,
@@ -33,14 +50,14 @@ run_lda_dtm <- function(dtm, k, seed, burn_in = 1000, iter = 1000, keep = 50){
   beta <- tidytext::tidy(lda, matrix = "beta")
   gamma <- tidytext::tidy(lda, matrix = "gamma")
 
-  logLiks <- dplyr::tibble(
+  logliks <- dplyr::tibble(
     iteration = seq_along(lda@logLiks) * keep,
-    logLik = lda@logLiks
+    loglik = lda@logLiks
   )
 
-  mean_logLik <- logLiks |>
-    dplyr::filter(iteration >= burn_in) |>
-    dplyr::pull(logLik) |>
+  mean_loglik <- logliks |>
+    dplyr::filter(.data[["iteration"]] >= burn_in) |>
+    dplyr::pull(.data[["loglik"]]) |>
     mean(na.rm = TRUE)
 
   return(
@@ -48,52 +65,63 @@ run_lda_dtm <- function(dtm, k, seed, burn_in = 1000, iter = 1000, keep = 50){
       lda = lda,
       beta = beta,
       gamma = gamma,
-      mean_logLik = mean_logLik,
-      final_logLik = lda@loglikelihood,
-      logLiks = logLiks
+      mean_loglik = mean_loglik,
+      final_loglik = lda@loglikelihood,
+      logliks = logliks
     )
   )
 }
 
 
-#' Title
+#' Run LDA across a range of questions each with a single topic numbers
 #'
-#' @param data
-#' @param col_doc_id
-#' @param question_topic_numbers
-#' @param seed
-#' @param clean_text_fn
-#' @param glossary_words
-#' @param stop_words
-#' @param stem_word_exceptions
+#' @param data data frame containing response text and ids for all questions.
+#' @param col_resp_id character string of column containing response id.
+#' @param question_topic_numbers named list with names corresponding to
+#'   questions to analyse and values integer values giving topic numbers.
+#' @param seed integer used to seed random number generator for Gibbs sampling.
+#' @param clean_text_fn function used to clean question text.
+#' @param glossary_words character vector of multi-word terms to be replaced
+#'   with single word equivalents (set to NULL to ignore).
+#' @param stop_words character vector of common words to be removed from
+#'   un-nested values (set to NULL to ignore).
+#' @param stem_word_exceptions character vector of terms not to stem (set to
+#'   NULL to ignore). Note these strings must match exactly.
 #'
-#' @return
+#' @return returns named list with names corresponding to questions and values
+#'   being the output of the LDA model.
 #' @export
 #'
-#' @examples
 run_lda <- function(
     data,
-    col_doc_id,
+    col_resp_id,
     question_topic_numbers,
     seed,
     clean_text_fn,
     glossary_words,
     stop_words,
-    stem_word_exceptions = NULL
-) {
+    stem_word_exceptions) {
+  assert_data_frame(data)
+  assert_string(col_resp_id)
+  assert_list(question_topic_numbers, types = c("integerish"), names = "named")
+  assert_integerish(seed, len = 1)
+  assert_function(clean_text_fn)
+  assert_character(glossary_words, null.ok = TRUE)
+  assert_character(stop_words, null.ok = TRUE)
+  assert_character(stem_word_exceptions, null.ok = TRUE)
+
   fn <- function(col) {
     return(
       data |>
-        dplyr::select(all_of(c(col_doc_id, col))) |>
+        dplyr::select(dplyr::all_of(c(col_resp_id, col))) |>
         unnest_words(
           col,
           clean_text_fn = clean_text_fn,
           glossary_words = glossary_words,
           stop_words = stop_words,
-          stem_word_exceptions = stem_word_exceptions,
-          use_stemming = TRUE
+          stem_word_exceptions = stem_word_exceptions
         ) |>
-        unnest_to_dtm(col_doc_id, col_word = "word") |>
+        unnest_to_dtm(col_resp_id, col_word = "word") |>
         run_lda_dtm(
           question_topic_numbers[[col]],
           seed
@@ -110,15 +138,16 @@ run_lda <- function(
 }
 
 
-#' Title
+#' Show plots of LDA model convergence
 #'
-#' @param ngram_list
-#' @param plot_rows
+#' @param lda_list named list of LDA objects generated by the
+#'   [run_lda()] function.
 #'
-#' @return
+#' @return invisibly returns passed LDA list object
 #' @export
 #'
 view_lda_convergence <- function(lda_list) {
+  assert_list(lda_list, types = c("list"), names = "named")
 
   questions <- names(lda_list)
 
@@ -132,19 +161,29 @@ view_lda_convergence <- function(lda_list) {
 }
 
 
-#' Title
+#' Write plots and LDA object to folder
 #'
-#' @param ngram_list
-#' @param folder
-#' @param plot_rows
-#' @param prefix
+#' Outputs all plots and objects into the specified `folder` using the
+#' passed `prefix` when naming files.
 #'
-#' @return
+#' @param lda_list named list of LDA objects generated by the
+#'   [fit_lda()] function.
+#' @param folder path to the folder in which to save (will create if not
+#'   present).
+#' @param prefix prefix to use when naming files (defaults to
+#'   `basename(folder)`)
+#'
+#' @return invisibly returns passed LDA list object
 #' @export
 #'
 write_lda <- function(
-    lda_list, folder, prefix = basename(folder)
-) {
+    lda_list,
+    folder,
+    prefix = basename(folder)) {
+  assert_list(lda_list, types = c("list"), names = "named")
+  assert_string(folder)
+  assert_string(prefix)
+
   # create output folder if not already present
   dir.create(folder, showWarnings = FALSE, recursive = TRUE)
 
@@ -156,13 +195,15 @@ write_lda <- function(
   c_plots |>
     seq_along() |>
     purrr::map(
-      \(i) write_plot_png(
-        c_plots[[i]],
-        file.path(
-          folder,
-          sprintf("%s_convergence_question_%02d", prefix, i)
+      \(i) {
+        write_plot_png(
+          c_plots[[i]],
+          file.path(
+            folder,
+            sprintf("%s_convergence_question_%02d", prefix, i)
+          )
         )
-      )
+      }
     )
 
   saveRDS(

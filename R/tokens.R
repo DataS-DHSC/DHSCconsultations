@@ -1,14 +1,14 @@
-
 #' @keywords internal
 get_token_counts <- function(data, cols_free_text, fn) {
-
   token_counts <- cols_free_text |>
     rlang::set_names(cols_free_text) |>
     purrr::map(
-      \(x) data |>
-        dplyr::select(dplyr::all_of(c(x))) |>
-        fn(x) |>
-        dplyr::count(dplyr::across(dplyr::everything()), sort = TRUE)
+      \(x) {
+        data |>
+          dplyr::select(dplyr::all_of(c(x))) |>
+          fn(x) |>
+          dplyr::count(dplyr::across(dplyr::everything()), sort = TRUE)
+      }
     )
 
   return(token_counts)
@@ -17,12 +17,13 @@ get_token_counts <- function(data, cols_free_text, fn) {
 
 #' @keywords internal
 view_token_counts <- function(token_counts, token_type) {
-
   token_counts |>
     names() |>
     purrr::map(
-      \(x) token_counts[[x]] |>
-        dplyr::view(title = sprintf("%s: %s count", x, token_type))
+      \(x) {
+        token_counts[[x]] |>
+          tibble::view(title = sprintf("%s: %s count", x, token_type))
+      }
     )
 
   invisible(token_counts)
@@ -31,13 +32,14 @@ view_token_counts <- function(token_counts, token_type) {
 
 #' @keywords internal
 plot_token_counts <- function(token_counts, plot_rows) {
-
   token_counts |>
     names() |>
     purrr::map(
-      \(x) token_counts[[x]] |>
-        plot_token_count(x, plot_rows) |>
-        print()
+      \(x) {
+        token_counts[[x]] |>
+          plot_token_count(x, plot_rows) |>
+          print()
+      }
     )
 
   invisible(token_counts)
@@ -46,9 +48,7 @@ plot_token_counts <- function(token_counts, plot_rows) {
 
 #' @keywords internal
 write_token_counts <- function(
-    token_counts, folder, token_type, plot_rows, prefix
-) {
-
+    token_counts, folder, token_type, plot_rows, prefix) {
   # create output folder if not already present
   dir.create(folder, showWarnings = FALSE, recursive = TRUE)
 
@@ -66,20 +66,22 @@ write_token_counts <- function(
   questions |>
     seq_along() |>
     purrr::map(
-      \(i) plot_token_count(token_counts[[i]], questions[[i]], plot_rows) |>
-        write_plot_png(
-          file.path(
-            folder,
-            sprintf("%s_%s_count_question_%02d", prefix, token_type, i)
+      \(i) {
+        plot_token_count(token_counts[[i]], questions[[i]], plot_rows) |>
+          write_plot_png(
+            file.path(
+              folder,
+              sprintf("%s_%s_count_question_%02d", prefix, token_type, i)
+            )
           )
-        )
+      }
     )
 }
 
 #' @keywords internal
 plot_token_count <- function(token_count, question, plot_rows) {
   token_count <- token_count |>
-    dplyr::mutate(rank = dplyr::row_number(dplyr::desc(n))) |>
+    dplyr::mutate(rank = dplyr::row_number(dplyr::desc(.data[["n"]]))) |>
     dplyr::filter(rank <= plot_rows)
 
   x_val <- setdiff(names(token_count), c("n", "rank"))
@@ -87,11 +89,11 @@ plot_token_count <- function(token_count, question, plot_rows) {
   plt <-
     ggplot2::ggplot(token_count) +
     ggplot2::geom_col(
-      ggplot2::aes(x = reorder(.data[[x_val]], -rank), y = n),
-      fill = "#00ad93" #dhsc_primary()
+      ggplot2::aes(x = stats::reorder(.data[[x_val]], -rank), y = .data[["n"]]),
+      fill = "#00ad93" # dhsc_primary()
     ) +
     ggplot2::geom_text(
-      aes(x = .data[[x_val]], y = n, label = n),
+      ggplot2::aes(x = .data[[x_val]], y = .data[["n"]], label = .data[["n"]]),
       hjust = 1.5,
       position = ggplot2::position_stack(vjust = 0.9),
       colour = "white"

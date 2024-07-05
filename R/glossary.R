@@ -1,24 +1,20 @@
-
 #' Replace multi-word glossary terms with single word equivalents
 #'
-#' This function allows muti-word terms to be preserved during LDA.
+#' This function allows multi-word terms to be preserved during LDA.
 #' For example, National Health Service becomes "nationalhealthservice" rather
 #' than "national", "health", and "service"
 #'
 #' @param x character vector of text to be transformed.
-#' @param glossary set of multi-word character strings to be replaced.
+#' @param glossary character vector of multi-word character strings to be
+#'   replaced.
 #'
 #' @return character vector with glossary words replaced with their single word
 #'   equivalents.
 #' @export
 #'
 replace_glossary <- function(x, glossary) {
-
-  stopifnot(
-    "`x` must be a character vector" = (is.character(x) || is.vector(x)),
-    "`glossary` must be a character vector" =
-      (is.character(glossary) || is.vector(glossary))
-  )
+  assert_character(x)
+  assert_character(glossary)
 
   glossary_pattern <- glossary |>
     stringr::str_replace_all("\\s", "") |>

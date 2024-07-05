@@ -2,27 +2,33 @@
 % Please edit documentation in R/lda_model.R
 \name{run_lda_dtm}
 \alias{run_lda_dtm}
-\title{Calculate LDA topic model}
+\title{Run Latent Dirichlet Allocation model}
 \usage{
 run_lda_dtm(dtm, k, seed, burn_in = 1000, iter = 1000, keep = 50)
 }
 \arguments{
-\item{dtm}{document-term matrix}
+\item{dtm}{document-term matrix of responses}
 
-\item{k}{number of topics to detect}
+\item{k}{integer number of topics to model}
 
-\item{seed}{seed for Gibbs LDA}
+\item{seed}{integer seed for Gibbs sampling}
 
-\item{burn_in}{parameter for Gibbs LDA}
+\item{burn_in}{integer number of iterations of the Gibbs sampling to ignore
+when calculating mean log-likelihood (total model iterations are
+\code{burn_in} + \code{iter}).}
 
-\item{iter}{parameter for Gibbs LDA}
+\item{iter}{integer number of iterations of the Gibbs sampling to perform
+after burn in (total model iterations are \code{burn_in} + \code{iter}).}
 
-\item{keep}{parameter for Gibbs LDA}
+\item{keep}{integer number of iterations between pulls used to calculate
+the mean log-likelihood.}
 }
 \value{
-list with elements: lda_out (full LDA topicmodel), beta (beta scores),
-gamma (gamma scores), and logLik (Log likelihood of topicmodel object)
+list with elements: lda (final LDA topicmodel), beta (beta scores),
+gamma (gamma scores), mean_loglik (log-likelihood calculated as the mean
+of the pulled values after burn in), final_loglik (log-likelihood of the
+final LDA model), and logliks (pulled log-likelihoods across all runs)
 }
 \description{
-Calculate LDA topic model
+Applies a Latent Dirichlet Allocation model using Gibbs sampling.
 }

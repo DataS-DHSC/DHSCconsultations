@@ -2,7 +2,7 @@
 #'
 #' @param freq_table data.frame, tibble of a multichoice frequency
 #' @param freq_column Column identifying frequency values
-#' @param percent_col Column identifying percentage values
+#' @param percent_column Column identifying percentage values
 #' @param min_n Value to suppress less than (min = 5 will suppress 4 or less)
 #'
 #' @return A suppressed frequency table for singlechoice question

@@ -1,4 +1,4 @@
-#' Title
+#'  Suppress a singlechoice frequency table 
 #'
 #' @param freq_table data.frame, tibble of a multichoice frequency
 #' @param freq_column Column identifying frequency values

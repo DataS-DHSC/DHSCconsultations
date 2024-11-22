@@ -21,9 +21,9 @@ algorithm.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-df <- data.frame(
-  id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA)
-)
-stem_words(df, word)
+
+words <- c("win", "winning", "winner", NA)
+
+stem_words(words)
 \dontshow{\}) # examplesIf}
 }

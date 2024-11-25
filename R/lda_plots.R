@@ -26,7 +26,7 @@ plot_lda_convergence <- function(k_list, question) {
         yintercept = .data[["loglikelihood"]]
       )
     ) +
-    ggplot2::theme_classic() +
+    afcharts::theme_af() +
     ggplot2::theme(
       axis.title.y = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank(),
@@ -80,7 +80,7 @@ plot_lda_k_loglik <- function(k_list, question) {
       colour = "#00ad93" # dhsc_primary()
     ) +
     ggplot2::scale_x_continuous(breaks = logliks$k) +
-    ggplot2::theme_classic() +
+    afcharts::theme_af() +
     ggplot2::theme(
       axis.title.y = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank()

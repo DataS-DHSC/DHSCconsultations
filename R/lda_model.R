@@ -196,7 +196,7 @@ write_lda <- function(
     seq_along() |>
     purrr::map(
       \(i) {
-        write_plot_png(
+        write_plot_svg(
           c_plots[[i]],
           file.path(
             folder,

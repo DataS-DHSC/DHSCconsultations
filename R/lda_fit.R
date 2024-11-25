@@ -162,7 +162,7 @@ write_lda_fit <- function(
     seq_along() |>
     purrr::map(
       \(i) {
-        write_plot_png(
+        write_plot_svg(
           c_plots[[i]],
           file.path(
             folder,
@@ -178,7 +178,7 @@ write_lda_fit <- function(
 
   l_plots |>
     patchwork::wrap_plots() |>
-    write_plot_png(
+    write_plot_svg(
       file.path(
         folder,
         sprintf("%s_loglikelihood_all", prefix)

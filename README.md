@@ -4,6 +4,9 @@
 # DHSCconsultations
 
 <!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/DataS-DHSC/DHSCconsultations/graph/badge.svg)](https://app.codecov.io/gh/DataS-DHSC/DHSCconsultations)
 <!-- badges: end -->
 
 The goal of DHSCconsultations is to provide a framework for performing

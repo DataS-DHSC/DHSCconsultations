@@ -15,13 +15,18 @@ test_that("summarise_words works", {
     identity, # no cleaning
     NULL, # no glossary
     stop_words = tidytext::stop_words$word,
-    min_char = 2)
+    min_char = 2
+  )
 
   # check the result is a list of two dataframes
   # first: two things with the right names
-  expect_equal(names(result),
-               c("Please share your views on policy 1",
-                 "Please share your views on policy 2"))
+  expect_equal(
+    names(result),
+    c(
+      "Please share your views on policy 1",
+      "Please share your views on policy 2"
+    )
+  )
   # second: is list
   checkmate::expect_list(result)
   # third: is data frames

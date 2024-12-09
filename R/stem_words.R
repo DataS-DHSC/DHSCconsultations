@@ -11,10 +11,10 @@
 #' @export
 #'
 #' @examplesIf interactive()
-#' df <- data.frame(
-#'   id = c(1, 2, 3, 4), word = c("win", "winning", "winner", NA)
-#' )
-#' stem_words(df, word)
+#'
+#' words <- c("win", "winning", "winner", NA)
+#'
+#' stem_words(words)
 #'
 stem_words <- function(x, exceptions = NULL) {
   assert_character(x)

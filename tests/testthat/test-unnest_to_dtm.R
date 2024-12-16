@@ -8,7 +8,7 @@ test_that("unnest_to_dtm works", {
   }
 
   # dummy response data
-  d1 = unnest_words(
+  d1 <- unnest_words(
     dummy_response,
     "Please share your views on policy 1",
     clean_words, "", tidytext::stop_words$word, ""
@@ -20,5 +20,4 @@ test_that("unnest_to_dtm works", {
 
   # is the right dimensions
   expect_equal(dim(d1), c(100, 3707))
-
 })

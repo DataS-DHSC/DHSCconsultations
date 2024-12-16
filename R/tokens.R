@@ -92,6 +92,7 @@ plot_token_count <- function(token_count, question, plot_rows) {
       ggplot2::aes(x = stats::reorder(.data[[x_val]], -rank), y = .data[["n"]]),
       fill = "#00ad93" # dhsc_primary()
     ) +
+    afcharts::theme_af() +
     ggplot2::geom_text(
       ggplot2::aes(x = .data[[x_val]], y = .data[["n"]], label = .data[["n"]]),
       hjust = 1.5,
@@ -99,7 +100,6 @@ plot_token_count <- function(token_count, question, plot_rows) {
       colour = "white"
     ) +
     ggplot2::coord_flip() +
-    ggplot2::theme_classic() +
     ggplot2::theme(
       axis.title.y = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank()

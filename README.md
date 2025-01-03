@@ -42,8 +42,7 @@ the seed is changed.
 
 ### Statistical Disclosure
 
-*If in doubt on this section, consult a member of the Government
-Statistical Service (GSS)*
+*If in doubt on this section, consult <statistics@DHSC.gov.uk>*
 
 The outputs of this library should not be immediately published, but
 will likely go into the consultation response publication. It is

@@ -10,7 +10,12 @@ The goal of DHSCconsultations is to provide a framework for performing
 consultation response analysis within the Department of Health & Social
 Care.
 
-## Installation
+## QA status
+All code in the `main` branch is QA'd.
+
+## Usage
+
+### Installation
 
 You can install the development version of DHSCconsultations like so:
 
@@ -24,8 +29,6 @@ To reinstall DHSCdatatools use:
 ``` r
 librarian::stock(DataS-DHSC/DHSCdatatools, update_all = TRUE)```
 ```
-
-## Usage
 
 ### Random Seeds
 

@@ -13,6 +13,12 @@ Care.
 ## QA status
 All code in the `main` branch is QA'd.
 
+## Development status
+Active.
+
+## Next review date
+1st April 2026.
+
 ## Usage
 
 ### Installation
